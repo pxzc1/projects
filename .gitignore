@@ -1,1 +1,9 @@
-/env
+#env/ directory (exclude env)
+env/
+
+#all .pyc files
+*.pyc
+
+#.vscode directory, .git directory (defualt configs maybe)
+.vscode/
+.git/
