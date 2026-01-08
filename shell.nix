@@ -13,4 +13,4 @@ pkgs.mkShell {
   '';
 }
 
-#nix-shell --impure first before running to expose CUDA runtime visibility [ChatGPT]
+#nix-shell --impure first before running to expose CUDA runtime visibility, [According to ChatGPT]

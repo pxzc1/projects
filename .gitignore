@@ -11,3 +11,6 @@ env/
 #ignore .pth and .onnx parameter files
 *.pth
 *.onnx
+
+#models save directory
+models/
