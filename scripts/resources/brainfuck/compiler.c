@@ -59,6 +59,7 @@ int main(int argc, char *argv[]) {
                 break;
             case '.':
                 fprintf(out, "    putchar(data[ptr]);\n");
+                fprintf(out, "    fflush(stdout);\n"); // Forces character to show in terminal
                 break;
             case ',':
                 fprintf(out, "    data[ptr] = getchar();\n");
@@ -93,12 +94,16 @@ int main(int argc, char *argv[]) {
     fclose(out);
 
     /* Compile and run */
-    if (system("gcc out.c -O3 -o hello") != 0) {
+    if (system("gcc out.c -O2 -o hello") != 0) {
         fprintf(stderr, "Compilation failed\n");
         return 1;
     }
 
     system("./hello");
+
+    /* Cleanup temporary files */
+    remove("out.c");
+    remove("hello");
 
     return 0;
 }
