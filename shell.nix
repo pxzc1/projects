@@ -1,27 +1,27 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> { config.allowUnfree = true; } }:
 
 let
-  # Define python with the necessary packages for Jupyter/Kernelspec
-  myPython = pkgs.python310.withPackages (ps: with ps; [
+  myPython = pkgs.python311.withPackages (ps: with ps; [
     ipykernel
     jupyter-client
-    # Add ML packages here so they see CUDA
   ]);
+
 in
 pkgs.mkShell {
+  name = "cuda-env";
+
   packages = with pkgs; [
     myPython
-    stdenv.cc.cc
-    glibc
+    stdenv.cc.cc.lib
     cudaPackages.cudatoolkit
+    linuxPackages.nvidia_x11
   ];
 
   shellHook = ''
-    # Fix for libstdc++.so.6 and CUDA visibility
     export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.linuxPackages.nvidia_x11}/lib:${pkgs.cudaPackages.cudatoolkit}/lib:$LD_LIBRARY_PATH
     
-    # Optional: Automatically register the kernel for this shell session
-    # python -m ipykernel install --user --name=nixos-cuda-env --display-name "Python 3.10 (NixOS + CUDA)"
+    echo "PyTorch version: $(python -c 'import torch; print(torch.__version__)')"
+    echo "CUDA Available:  $(python -c 'import torch; print(torch.cuda.is_available())')"
   '';
 }
 
