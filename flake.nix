@@ -17,9 +17,10 @@
         python310
         python310.pkgs.venvShellHook
         python310.pkgs.pip
+        python310.pkgs.ipykernel
       ];
 
-      venvDir = "env";
+      venvDir = "3.10.15";
 
       postShellHook = ''
         echo "Using Python: $(python --version)"

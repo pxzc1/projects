@@ -1,9 +1,8 @@
 { pkgs ? import <nixpkgs> { config.allowUnfree = true; } }:
 
 let
-  myPython = pkgs.python311.withPackages (ps: with ps; [
+  PKGS = pkgs.python311.withPackages (ps: with ps; [
     ipykernel
-    jupyter-client
   ]);
 
 in
@@ -11,7 +10,7 @@ pkgs.mkShell {
   name = "cuda-env";
 
   packages = with pkgs; [
-    myPython
+    PKGS
     stdenv.cc.cc.lib
     cudaPackages.cudatoolkit
     linuxPackages.nvidia_x11
