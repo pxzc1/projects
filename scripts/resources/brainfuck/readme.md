@@ -12,4 +12,4 @@ Brainfuck Compiler (Interpreter as provide by developer) written in C.
 `./compiler <example>.bf` (run from Documents/ax_/scripts/resources/brainfuck)
 
 ## Developer
-(Brainfuck-C)['github.com/kgabis/brainfuck-c'] by "@kgabis", patched by ['pxzc1']('github.com/pxzc1)
+(Brainfuck-C)['github.com/kgabis/brainfuck-c'] by "@kgabis", patched by [pxzc1]('github.com/pxzc1)

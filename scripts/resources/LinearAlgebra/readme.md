@@ -5,4 +5,3 @@
     3. source <env>/bin/activate (in this case it's '3.10.15')
     4. run vscode 'code' (shell alias of vscode)
     5. run cells
-
