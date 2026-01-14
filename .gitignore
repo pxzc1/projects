@@ -18,3 +18,9 @@ models/
 
 #compiler
 compiler
+
+#downloaded datasets
+FashionMNIST/
+
+#zipped files
+*.gz
