@@ -1,8 +1,8 @@
 {
-  description = "ML Development Environment with Python 3.10 and CUDA";
+  description = "Python 3.10 + CUDA runtime";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
   };
 
   outputs = { self, nixpkgs }:
@@ -12,34 +12,34 @@
         inherit system;
         config.allowUnfree = true;
       };
-      python310 = pkgs.python310;
-    in
-    {
+      python = pkgs.python312;
+    in {
       devShells.${system}.default = pkgs.mkShell {
-        name = "cuda";
+        name = "torch";
 
         packages = [
-          python310
-          python310.pkgs.venvShellHook
-          python310.pkgs.pip
+          python
+          python.pkgs.pip
           pkgs.stdenv.cc.cc.lib
           pkgs.cudaPackages.cudatoolkit
-          pkgs.linuxPackages.nvidia_x11
         ];
 
-        venvDir = "env";
-
         shellHook = ''
-          # 1. Setup CUDA/NVIDIA library paths (from your shell.nix)
-          export LD_LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.linuxPackages.nvidia_x11}/lib:${pkgs.cudaPackages.cudatoolkit}/lib:$LD_LIBRARY_PATH"
-          
-          # 2. Run the venvShellHook (this activates the venv automatically)
-          # No need to manually 'source 3.10.15/bin/activate'
-          
-          echo "Environment Ready!"
-          echo "Python version: $(python --version)"
-          # Try to check torch if it was already installed via pip
-          python -c "import torch; print(f'Torch: {torch.__version__} | CUDA: {torch.cuda.is_available()}')" 2>/dev/null || echo "Torch not yet installed in venv."
+          export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.cudaPackages.cudatoolkit}/lib:$LD_LIBRARY_PATH
+
+          venvDir="env"
+
+          if [ ! -d "$venvDir" ]; then
+            echo "Building Environment: '$venvDir'"
+            python -m venv "$venvDir"
+          else
+            echo "Environment Already Exists."
+          fi
+
+          source "$venvDir/bin/activate"
+
+          echo "Python: $(python --version), [env]: $venvDir"
+          echo "pip: $(pip --version)"
         '';
       };
     };

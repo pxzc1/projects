@@ -1,6 +1,5 @@
 #env/ directory (exclude env)
 env/
-3.10.15/
 
 #all .pyc files
 *.pyc
