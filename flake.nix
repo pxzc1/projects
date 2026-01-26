@@ -38,8 +38,9 @@
 
           source "$venvDir/bin/activate"
 
-          echo "Python: $(python --version), [env]: $venvDir"
-          echo "pip: $(pip --version)"
+          echo "$(python --version), env Path: $venvDir, PIP: $(pip --version)"
+
+          python scripts/utils/test/verification.py
         '';
       };
     };

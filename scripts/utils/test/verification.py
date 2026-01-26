@@ -3,7 +3,8 @@ import torch
 def verify() -> str:
     
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print('PyTorch Verifications')
+    print('')
+    print('-'*5 + ' PyTorch Verifications ' + '-'*5)
     print(f'Version: {torch.__version__}')
     print(f'CUDA Version: {torch.torch.version.cuda}')
     print(f'CUDA Available: {torch.cuda.is_available()}')
