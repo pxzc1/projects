@@ -1,5 +1,5 @@
 {
-  description = "Python 3.10 + CUDA runtime";
+  description = "Python 3.12 + CUDA";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
@@ -12,35 +12,42 @@
         inherit system;
         config.allowUnfree = true;
       };
+
       python = pkgs.python312;
     in {
       devShells.${system}.default = pkgs.mkShell {
-        name = "torch";
+        name = "torch-shell";
 
-        packages = [
+        packages = with pkgs; [
           python
           python.pkgs.pip
-          pkgs.stdenv.cc.cc.lib
-          pkgs.cudaPackages.cudatoolkit
+          python.pkgs.virtualenv
+          zlib
+          stdenv.cc.cc
+          glibc
+          cudaPackages.cudatoolkit #cuda
         ];
 
         shellHook = ''
-          export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.cudaPackages.cudatoolkit}/lib:$LD_LIBRARY_PATH
-
-          venvDir="env"
+          export venvDir=env
+          
+          export LD_LIBRARY_PATH="/run/opengl-driver/lib:/run/opengl-driver-32/lib:${pkgs.lib.makeLibraryPath [
+            pkgs.stdenv.cc.cc
+            pkgs.zlib
+            pkgs.cudaPackages.cudatoolkit
+          ]}:$LD_LIBRARY_PATH"
 
           if [ ! -d "$venvDir" ]; then
-            echo "Building Environment: '$venvDir'"
-            python -m venv "$venvDir"
-          else
-            echo "Environment Already Exists."
+            echo "Creating Virtual Environment in $venvDir"
+            ${python}/bin/python -m venv "$venvDir"
           fi
 
           source "$venvDir/bin/activate"
 
-          echo "$(python --version), name: $venvDir, PIP: $(pip --version)"
-
-          python scripts/utils/test/verification.py
+          echo "Python: $(python --version)"
+          echo "Pip: $(pip --version)"
+          
+          python src/utils/test/verification.py
         '';
       };
     };
